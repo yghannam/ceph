@@ -8936,6 +8936,12 @@ void MDCache::eval_stray(CDentry *dn, bool delay)
 	  return;  // not until some snaps are deleted.
 	}
       }
+      if (in->has_dirfrags()) {
+	list<CDir*> ls;
+	in->get_nested_dirfrags(ls);
+	for (list<CDir*>::iterator p = ls.begin(); p != ls.end(); ++p)
+	  (*p)->try_remove_dentries_for_stray();
+      }
     }
     if (dn->is_replicated()) {
       dout(20) << " replicated" << dendl;
@@ -8992,16 +8998,6 @@ void MDCache::eval_stray(CDentry *dn, bool delay)
     }
   } else {
     // wait for next use.
-  }
-}
-
-void MDCache::try_remove_dentries_for_stray(CInode* diri) {
-  assert(diri->inode.nlink == 0);
-  if (diri->has_dirfrags()) {
-    list<CDir*> ls;
-    diri->get_nested_dirfrags(ls);
-    for (list<CDir*>::iterator p = ls.begin(); p != ls.end(); ++p)
-      (*p)->try_remove_dentries_for_stray();
   }
 }
 
