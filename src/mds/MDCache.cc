@@ -5786,6 +5786,7 @@ void MDCache::queue_file_recover(CInode *in)
   assert(in->is_auth());
 
   // cow?
+  /*
   SnapRealm *realm = in->find_snaprealm();
   set<snapid_t> s = realm->get_snaps();
   while (!s.empty() && *s.begin() < in->first)
@@ -5818,6 +5819,7 @@ void MDCache::queue_file_recover(CInode *in)
     mds->mdlog->submit_entry(le, new C_MDC_QueuedCow(this, in, mut));
     mds->mdlog->flush();
   }
+  */
 
   recovery_queue.enqueue(in);
 }
