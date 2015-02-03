@@ -48,7 +48,7 @@ static int get_fd_data(int fd, bufferlist &bl)
   do {
     ssize_t bytes = bl.read_fd(fd, 1024*1024);
     if (bytes < 0) {
-      out << "read_fd error " << cpp_strerror(-bytes) << "\n";
+      cerr << "read_fd error " << cpp_strerror(-bytes) << "\n";
       return -1;
     }
 
