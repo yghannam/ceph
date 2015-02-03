@@ -415,15 +415,14 @@ int CrushTester::test_with_crushtool()
   }
 
   if (r == ENOENT) {
-    // crushtool binary was not found in PATH.
-    // try the standard test() function
-    return test();
+    err << "unable to find 'crushtool' to test the map";
+    return -ENOENT;
   }
 
   // something else entirely happened
   // log it and consider an invalid crush map
   err << "error running crushmap through crushtool: " << cpp_strerror(r);
-  return -EINVAL;
+  return -r;
 }
 
 int CrushTester::test()
