@@ -1450,8 +1450,13 @@ void ReplicatedPG::do_op(OpRequestRef& op)
    * We can enable degraded writes on ec pools by blocking such a write
    * to a peer until all previous writes have completed.  For now, we
    * will simply block them.
+   *
+   * We also block if our peers do not support DEGRADED_WRITES.
    */
-  if (pool.info.ec_pool() && write_ordered && is_degraded_object(head)) {
+  if ((pool.info.ec_pool() ||
+       get_min_peer_features() & CEPH_FEATURE_OSD_DEGRADED_WRITES) &&
+      write_ordered &&
+      is_degraded_object(head)) {
     wait_for_degraded_object(head, op);
     return;
   }
@@ -1725,6 +1730,14 @@ void ReplicatedPG::do_op(OpRequestRef& op)
 
   if (!obc->obs.exists)
     ctx->snapset_obc = get_object_context(obc->obs.oi.soid.get_snapdir(), false);
+
+  /* Due to obc caching, we might have a cached non-existent snapset_obc
+   * for the snapdir.  If so, we can ignore it.  Subsequent parts of the
+   * do_op pipeline make decisions based on whether snapset_obc is
+   * populated.
+   */
+  if (ctx->snapset_obc && !ctx->snapset_obc->obs.exists)
+    ctx->snapset_obc = ObjectContextRef();
 
   if (m->get_flags() & CEPH_OSD_FLAG_SKIPRWLOCKS) {
     dout(20) << __func__ << ": skipping rw locks" << dendl;
@@ -7370,7 +7383,7 @@ void ReplicatedPG::op_applied(const eversion_t &applied_version)
         osd->scrub_wq.queue(this);
       }
     } else {
-      assert(!scrubber.block_writes);
+      assert(scrubber.start == scrubber.end);
     }
   } else {
     if (scrubber.active_rep_scrub) {
