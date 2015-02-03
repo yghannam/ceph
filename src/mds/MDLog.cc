@@ -56,14 +56,14 @@ void MDLog::create_logger()
   plb.add_u64_counter(l_mdl_evadd, "evadd");
   plb.add_u64_counter(l_mdl_evex, "evex");
   plb.add_u64_counter(l_mdl_evtrm, "evtrm");
-  plb.add_u64(l_mdl_ev, "ev");
+  plb.add_u64(l_mdl_ev, "ev", "evts");
   plb.add_u64(l_mdl_evexg, "evexg");
   plb.add_u64(l_mdl_evexd, "evexd");
 
   plb.add_u64_counter(l_mdl_segadd, "segadd");
   plb.add_u64_counter(l_mdl_segex, "segex");
   plb.add_u64_counter(l_mdl_segtrm, "segtrm");
-  plb.add_u64(l_mdl_seg, "seg");
+  plb.add_u64(l_mdl_seg, "seg", "segs");
   plb.add_u64(l_mdl_segexg, "segexg");
   plb.add_u64(l_mdl_segexd, "segexd");
 

@@ -651,14 +651,14 @@ void MDS::create_logger()
     mds_plb.add_u64_counter(l_mds_dir_split, "dir_split");
 
     mds_plb.add_u64(l_mds_inode_max, "inode_max");
-    mds_plb.add_u64(l_mds_inodes, "inodes");
+    mds_plb.add_u64(l_mds_inodes, "inodes", "inos");
     mds_plb.add_u64(l_mds_inodes_top, "inodes_top");
     mds_plb.add_u64(l_mds_inodes_bottom, "inodes_bottom");
     mds_plb.add_u64(l_mds_inodes_pin_tail, "inodes_pin_tail");  
     mds_plb.add_u64(l_mds_inodes_pinned, "inodes_pinned");
     mds_plb.add_u64_counter(l_mds_inodes_expired, "inodes_expired");
     mds_plb.add_u64_counter(l_mds_inodes_with_caps, "inodes_with_caps");
-    mds_plb.add_u64_counter(l_mds_caps, "caps");
+    mds_plb.add_u64_counter(l_mds_caps, "caps", "caps");
     mds_plb.add_u64(l_mds_subtrees, "subtrees");
     
     mds_plb.add_u64_counter(l_mds_traverse, "traverse"); 
